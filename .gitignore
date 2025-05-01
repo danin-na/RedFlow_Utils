@@ -1,0 +1,17 @@
+# Dependencies
+node_modules
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log
+
+# Build / Dist folders
+dist
+build
+
+# Optional: Environment variables
+.env
+
+# Optional: Coverage
+coverage
