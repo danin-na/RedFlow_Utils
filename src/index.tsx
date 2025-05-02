@@ -1,6 +1,6 @@
 import React, { useState, useEffect, KeyboardEvent } from "react";
 import ReactDOM from "react-dom/client";
-import VV from './loadVariables'
+import create from "./create"
 
 const sortClasses = (arr: string[]) =>
   arr.filter(Boolean).sort((a, b) => a.localeCompare(b));
@@ -62,28 +62,12 @@ const App: React.FC = () =>
     }
   };
 
-  const getVars = async () => {
-    const sizeVars = await VV.loadTextSizeVariables()
-  
-    for (const size of VV.textSizes) {
-      const varSt = sizeVars[size]
-      const styleName = `fs-${size}`
-
-      const newStyle = await webflow.createStyle(styleName)
-      await newStyle.setProperty('font-size', varSt)
-  
-      const e = await webflow.getSelectedElement()
-      if (e?.children) {
-        const n = await e.append(webflow.elementPresets.DivBlock)
-        await n.setStyles([newStyle])
-      }
-    }
-  }
+ // create()
 
 
   return (
     <div className="app-container">
-      <button onClick={() => { getVars() }}>create</button>
+      <button className="class-item" onClick={() => { create() }}>create</button>
       <input
         className="class-input"
         type="text"
