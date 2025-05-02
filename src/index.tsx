@@ -2,6 +2,17 @@ import React, { useState, useEffect, KeyboardEvent } from "react";
 import ReactDOM from "react-dom/client";
 import create from "./create"
 import KEYS_LIST from "./keys";
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "./components/ui/command"
 
 
 
@@ -104,14 +115,30 @@ const App: React.FC = () => {
     }
   };
 
-
-
-
   return (
     <div className="app-container">
-      <button className="app-button" onClick={() => create()}>Install</button>
+      <button className="text-red-50 text-3xl" onClick={() => create()}>TEST6</button>
+
+      <Command>
+  <CommandInput placeholder="Type a command or search..." />
+  <CommandList>
+    <CommandEmpty>No results found.</CommandEmpty>
+    <CommandGroup heading="Suggestions">
+      <CommandItem>Calendar</CommandItem>
+      <CommandItem>Search Emoji</CommandItem>
+      <CommandItem>Calculator</CommandItem>
+    </CommandGroup>
+    <CommandSeparator />
+    <CommandGroup heading="Settings">
+      <CommandItem>Profile</CommandItem>
+      <CommandItem>Billing</CommandItem>
+      <CommandItem>Settings</CommandItem>
+    </CommandGroup>
+  </CommandList>
+</Command>
 
       <div style={{ position: "relative", margin: "0.5rem 0" }}>
+
         <input
           className="class-input"
           type="text"

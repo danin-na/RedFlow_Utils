@@ -28,7 +28,16 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "react-dom": "^18.2.0"
+    "@radix-ui/react-dialog": "^1.1.11",
+    "@tailwindcss/cli": "^4.1.5",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "lucide-react": "^0.506.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^3.2.0",
+    "tailwindcss": "^4.1.5",
+    "tw-animate-css": "^1.2.9"
   },
   "babel": {
     "presets": [
