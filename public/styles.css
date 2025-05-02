@@ -1,4 +1,4 @@
-/*
+
 :root {
     
 --background1: #1E1E1E;
@@ -9,6 +9,7 @@
 --backgroundInactive: #2E2E2E;
 --backgroundInverse: #EBEBEB;
 --backgroundInput: rgba(0, 0, 0, 0.15);
+
 --actionPrimaryBackground: #006ACC;
 --actionPrimaryBackgroundHover: #187CD9;
 --actionSecondaryBackground: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.10) 100%);
@@ -17,6 +18,7 @@
 --actionPrimaryTextHover: #FFFFFF;
 --actionSecondaryText: #E0E0E0;
 --actionSecondaryTextHover: #E0E0E0;
+
 --border1: rgba(255, 255, 255, 0.13);
 --border2: rgba(255, 255, 255, 0.14);
 --border3: rgba(255, 255, 255, 0.19);
@@ -70,4 +72,3 @@
 --border-radius: 4px;
 
 }
-*/

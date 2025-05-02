@@ -6,13 +6,33 @@
 	</head>
 
 	<style>
-		/* App.css */
+
 		.app-container {
 			background: var(--background1);
 			color: var(--text1);
 			font-family: var(--font-stack);
-			padding: 1rem;
-			font-size:0.875rem;
+			font-size: var(--font-size-small);
+			padding:1rem;
+		}
+
+		.app-button {
+			all:unset;
+			border:solid 1pxvar(--background2);
+			padding:5px 10px;
+			border-radius:var(--border-radius);
+			background: var(--background3);
+			color: var(--text1);
+		}
+
+		.app-input-popup {
+              position: absolute;
+              top : 100%;
+              left:0;
+			  right:0;
+              background-color: var(--background2);
+              list-style: none;
+              padding: 0.1rem;
+              z-index: 10,
 		}
 
 		.class-input {
@@ -57,6 +77,7 @@
 		.remove-btn:hover {
 			color: var(--redBackgroundHover);
 		}
+
 	</style>
 
 	<body>
