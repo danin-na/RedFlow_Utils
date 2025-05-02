@@ -1,3 +1,6 @@
+@import "./tailwind.css";
+@import "./shadcn.css";
+
 .app-container {
   background: var(--background1);
   color: var(--text1);

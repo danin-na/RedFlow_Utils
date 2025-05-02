@@ -117,7 +117,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      <button className="text-red-50 text-3xl" onClick={() => create()}>TEST6</button>
+      <button className="text-red-50" onClick={() => create()}>TEST6</button>
 
       <Command>
   <CommandInput placeholder="Type a command or search..." />
