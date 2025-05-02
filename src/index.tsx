@@ -4,6 +4,7 @@ import create from "./create"
 import KEYS_LIST from "./keys";
 
 
+
 const sortClasses = (arr: string[]) =>
   arr.filter(Boolean).sort((a, b) => a.localeCompare(b));
 
@@ -13,6 +14,12 @@ const App: React.FC = () => {
   const [highlighted, setHighlighted] = useState(0);
   const [classList, setClassList] = useState<string[]>([]);
   const [selectedElement, setSelectedElement] = useState<any>(null);
+
+  const setup = async () => {
+    await webflow.setExtensionSize({width: 200, height: 500});
+  }
+
+  setup()
 
   // subscribe to selected element (your existing logic)
   useEffect(() => {
@@ -96,6 +103,9 @@ const App: React.FC = () => {
       setClassList([]);
     }
   };
+
+
+
 
   return (
     <div className="app-container">
