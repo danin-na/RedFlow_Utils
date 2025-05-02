@@ -1,54 +1,79 @@
 import React, { useState, useEffect, KeyboardEvent } from "react";
 import ReactDOM from "react-dom/client";
-import create from "./create"
+import create from "./create";
+import KEYS_LIST from "./keys";
 
-const sortClasses = (arr: string[]) =>
-  arr.filter(Boolean).sort((a, b) => a.localeCompare(b));
+// Utility to sort and clean class names
+const sortClasses = (classes: string[]): string[] =>
+  classes.filter(Boolean).sort((a, b) => a.localeCompare(b));
 
-const App: React.FC = () =>
-{
-  const [className, setClassName] = useState("");
-  const [selectedElement, setSelectedElement] = useState<any>(null);
+const App: React.FC = () => {
+  const [className, setClassName] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
   const [classList, setClassList] = useState<string[]>([]);
+  const [selectedElement, setSelectedElement] = useState<any>(null);
 
-  // Subscribe & load on selection
-  useEffect(() =>
-  {
-    const callback = async (el: any) =>
-    {
+  // Subscribe to selected element changes
+  useEffect(() => {
+    const callback = async (el: any) => {
       setSelectedElement(el);
       if (el?.getAllCustomAttributes) {
         const attrs = (await el.getAllCustomAttributes()) || [];
-        const cls = attrs.find((a: any) => a.name === "class")?.value || "";
-        setClassList(sortClasses(cls.split(" ")));
+        const classAttr = attrs.find((a: any) => a.name === "class")?.value || "";
+        setClassList(sortClasses(classAttr.split(" ")));
       } else {
         setClassList([]);
       }
     };
     const unsubscribe = webflow.subscribe("selectedelement", callback);
-    return () => unsubscribe();
+    return unsubscribe;
   }, []);
 
-  // Add on Enter
-  const handleKeyDown = async (e: KeyboardEvent<HTMLInputElement>) =>
-  {
-    if (e.key !== "Enter" || !selectedElement?.getAllCustomAttributes) return;
+  // Update suggestions based on input
+  useEffect(() => {
+    if (!className) {
+      setSuggestions([]);
+      return;
+    }
+    const matches = KEYS_LIST.filter(
+      key => key.startsWith(className) && key !== className
+    );
+    setSuggestions(matches);
+    setHighlightedIndex(0);
+  }, [className]);
 
-    const attrs = (await selectedElement.getAllCustomAttributes()) || [];
-    const existing = attrs.find((a: any) => a.name === "class")?.value || "";
-    const combined = existing ? `${existing} ${className}` : className;
-
-    const sorted = sortClasses(combined.split(" "));
-    await selectedElement.setCustomAttribute("class", sorted.join(" "));
-    setClassList(sorted);
-    setClassName("");
+  // Handle keyboard interactions
+  const handleKeyDown = async (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown" && suggestions.length) {
+      e.preventDefault();
+      setHighlightedIndex(i => Math.min(i + 1, suggestions.length - 1));
+    } else if (e.key === "ArrowUp" && suggestions.length) {
+      e.preventDefault();
+      setHighlightedIndex(i => Math.max(i - 1, 0));
+    } else if (e.key === "Tab" && suggestions.length) {
+      e.preventDefault();
+      setClassName(suggestions[highlightedIndex]);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (suggestions.length && className !== suggestions[highlightedIndex]) {
+        setClassName(suggestions[highlightedIndex]);
+      } else if (selectedElement?.getAllCustomAttributes) {
+        const attrs = (await selectedElement.getAllCustomAttributes()) || [];
+        const existing = attrs.find((a: any) => a.name === "class")?.value || "";
+        const combined = existing ? `${existing} ${className}` : className;
+        const sorted = sortClasses(combined.split(" "));
+        await selectedElement.setCustomAttribute("class", sorted.join(" "));
+        setClassList(sorted);
+        setClassName("");
+        setSuggestions([]);
+      }
+    }
   };
 
-  // Remove on click
-  const handleRemoveClass = async (cn: string) =>
-  {
+  // Remove a class from the element
+  const removeClass = async (cn: string) => {
     if (!selectedElement?.getAllCustomAttributes) return;
-
     const attrs = (await selectedElement.getAllCustomAttributes()) || [];
     const existing = attrs.find((a: any) => a.name === "class")?.value || "";
     const filtered = existing.split(" ").filter(item => item !== cn);
@@ -62,30 +87,39 @@ const App: React.FC = () =>
     }
   };
 
- // create()
-
-
   return (
     <div className="app-container">
-      <button className="class-item" onClick={() => { create() }}>create</button>
-      <input
-        className="class-input"
-        type="text"
-        placeholder="Type a class and press Enter"
-        value={className}
-        onChange={e => setClassName(e.target.value)}
-        onKeyDown={handleKeyDown}
-      />
+      <button onClick={create}>Install</button>
+
+      <div className="input-wrapper">
+        <input
+          type="text"
+          placeholder="Type a class…"
+          value={className}
+          onChange={e => setClassName(e.target.value)}
+          onKeyDown={handleKeyDown}
+          autoComplete="off"
+        />
+        {suggestions.length > 0 && (
+          <ul className="suggestions-list">
+            {suggestions.map((s, i) => (
+              <li
+                key={s}
+                onMouseDown={() => setClassName(s)}
+                className={i === highlightedIndex ? "highlighted" : ""}
+              >
+                {s}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       <ul className="class-list">
         {classList.map(c => (
           <li key={c} className="class-item">
             <span>{c}</span>
-            <button
-              className="remove-btn"
-              onClick={() => handleRemoveClass(c)}
-              aria-label={`Remove ${c}`}
-            >
+            <button onClick={() => removeClass(c)} aria-label={`Remove ${c}`}>
               ✕
             </button>
           </li>
@@ -95,7 +129,7 @@ const App: React.FC = () =>
   );
 };
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-root.render(<App />);
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(<App />);
+}
