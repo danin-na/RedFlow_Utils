@@ -7,14 +7,14 @@
       "config": "",
       "css": "public/tailwind.css",
       "baseColor": "neutral",
-      "cssVariables": false,
+      "cssVariables": true,
       "prefix": ""
     },
     "aliases": {
       "components": "@/src/components/",
-      "utils": "@/src/components/lib/utils",
+      "utils": "@/src/lib/utils",
       "ui": "@/src/components/ui",
-      "lib": "@/src/components/lib",
+      "lib": "@/src/lib",
       "hooks": "@/hooks"
     },
     "iconLibrary": "lucide"

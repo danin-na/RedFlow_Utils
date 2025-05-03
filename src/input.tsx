@@ -3,21 +3,23 @@
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 
-import { cn } from "./components/ui/lib/utils"
-import { Button } from "./components/ui/button"
-import {
+import { cn } from "./lib/utils"
+import { Button } from "./components/ui/ui-shadcn/button"
+import
+{
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from "./components/ui/command"
-import {
+} from "./components/ui/ui-shadcn/command"
+import
+{
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "./components/ui/popover"
+} from "./components/ui/ui-shadcn/popover"
 
 const frameworks = [
   {
@@ -42,7 +44,8 @@ const frameworks = [
   },
 ]
 
-export function ComboboxDemo() {
+export function ComboboxDemo ()
+{
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
 
@@ -71,7 +74,8 @@ export function ComboboxDemo() {
                 <CommandItem
                   key={framework.value}
                   value={framework.value}
-                  onSelect={(currentValue) => {
+                  onSelect={(currentValue) =>
+                  {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
                   }}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { MailOpen } from "lucide-react";
-import { Button } from "./components/ui/button_copy";
+import { Button } from "./components/ui/ui-shadcn/button_copy";
 import
 {
   Command,
@@ -10,11 +10,11 @@ import
   CommandGroup,
   CommandItem,
   CommandSeparator,
-} from "./components/ui/command";
+} from "./components/ui/ui-shadcn/command";
 
 import { SquareDashed, LetterText, AlignEndHorizontal, RulerDimensionLine, Asterisk } from "lucide-react";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/ui-shadcn/tabs"
 
 import KEYS_LIST from "./keys";
 

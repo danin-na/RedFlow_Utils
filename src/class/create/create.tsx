@@ -120,6 +120,7 @@ const create = async () =>
     ] as const;
 
     for (const { sizes, loader, prefix, props } of configs) {
+
         const vars = await loader();
         for (const size of sizes) {
             const value = vars[size];
