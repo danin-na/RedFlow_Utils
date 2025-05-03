@@ -1,4 +1,4 @@
-const KEYS_LIST = [
+const ClassKeys = [
   "flex-align-baseline",
   "flex-align-center",
   "flex-align-end",
@@ -311,7 +311,7 @@ const KEYS_LIST = [
   "z-90",
 ];
 
-export default KEYS_LIST
+export default ClassKeys
 
 // COPY PASTE 
 // grep -oP '\.\K[A-Za-z0-9_-]+' style.css \ | sort -u \ | sed 's/.*/"&",/'

@@ -31,3 +31,22 @@ export
     DialogTrigger,
     DialogFooter,
 } from "./dialog"
+
+export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card"
+
+export { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs"
+
+export
+{
+    Command,
+    CommandDialog,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+    CommandSeparator,
+    CommandShortcut,
+} from "./command"
+
+export { SquareDashed, LetterText, AlignEndHorizontal, RulerDimensionLine, Asterisk } from "lucide-react"

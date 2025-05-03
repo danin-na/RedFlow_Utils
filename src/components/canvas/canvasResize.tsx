@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 import
 {
@@ -12,30 +12,53 @@ import
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/src/components/ui";
+} from "@/src/ui"
 
 interface CanvasResizeProps
 {
-    children: any;
+    children: React.ReactNode
 }
 
 export function CanvasResize ({ children }: CanvasResizeProps)
 {
-    const [open, setOpen] = React.useState(false);
-    const [width, setWidth] = React.useState<number>(320);
-    const [height, setHeight] = React.useState<number>(560);
+    const [open, setOpen] = React.useState(false)
+    const [width, setWidth] = React.useState<number>(320)
+    const [height, setHeight] = React.useState<number>(560)
+    // flip this to true when user submits
+    const [shouldResize, setShouldResize] = React.useState(false)
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) =>
+    // only runs when shouldResize goes from false → true
+    React.useEffect(() =>
     {
-        e.preventDefault();
-        try {
-            await webflow.setExtensionSize({ width, height });
-            console.log(`Extension UI size set to → { width: ${width}, height: ${height} }`);
-            setOpen(false);
-        } catch (err) {
-            console.error("Failed to set extension size", err);
+        if (!shouldResize) return
+
+        const resize = async () =>
+        {
+            try {
+                await webflow.setExtensionSize({ width, height })
+                console.log(
+                    `Extension UI size set to → { width: ${width}, height: ${height} }`
+                )
+                setOpen(false)
+            } catch (err) {
+                console.error("Failed to set extension size", err)
+            } finally {
+                // reset the flag so effect won't run again until next submit
+                setShouldResize(false)
+            }
         }
-    };
+
+        resize()
+    }, [shouldResize, width, height])
+
+    const handleSubmit = (e: React.FormEvent) =>
+    {
+        e.preventDefault()
+        // only trigger effect if both fields are valid
+        if (width >= 200 && height >= 200) {
+            setShouldResize(true)
+        }
+    }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -78,10 +101,15 @@ export function CanvasResize ({ children }: CanvasResizeProps)
                     </div>
 
                     <DialogFooter>
-                        <Button type="submit">Apply size</Button>
+                        <Button
+                            type="submit"
+                            disabled={width < 200 || height < 200}
+                        >
+                            Apply size
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
         </Dialog>
-    );
+    )
 }
