@@ -9,4 +9,6 @@ export
     readAsset,
     setAssetFolder,
     updateAsset,
+    ensureAsset,
+    ensureFolder,
 } from "./assetManager"

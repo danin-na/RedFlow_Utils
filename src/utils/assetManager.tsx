@@ -37,6 +37,15 @@ export async function getFolderByName (name: string): Promise<AssetFolder | null
     return null
 }
 
+export async function ensureFolder (name: string): Promise<AssetFolder>
+{
+    let folder = await getFolderByName(name);
+    if (!folder) {
+        folder = await createFolder(name)!;
+    }
+    return folder;
+}
+
 // Asset
 
 export async function getAssetById (id: string): Promise<Asset | null>
@@ -89,6 +98,21 @@ export async function readAsset (asset: Asset): Promise<any>
     }
 }
 
+export async function ensureAsset (
+    folderName: string,
+    assetName: string,
+    initialContent: string | Record<string, any> = '{}'
+): Promise<Asset>
+{
+    const folder = await ensureFolder(folderName);
+    let asset = await getAssetByName(assetName);
+    if (!asset) {
+        asset = await createAsset(assetName, initialContent)!;
+        await setAssetFolder(asset, folder);
+    }
+    return asset;
+}
+
 // Folder & Asset
 
 export async function setAssetFolder (asset: Asset, folder: AssetFolder): Promise<Asset | null>
@@ -100,3 +124,5 @@ export async function setAssetFolder (asset: Asset, folder: AssetFolder): Promis
         return null
     }
 }
+
+
