@@ -1,14 +1,5 @@
-export
-{
-    createAsset,
-    createFolder,
-    getAssetById,
-    getAssetByName,
-    getFolderById,
-    getFolderByName,
-    readAsset,
-    setAssetFolder,
-    updateAsset,
-    ensureAsset,
-    ensureFolder,
-} from "./assetManager"
+import { file } from "./fileManager";
+
+const u = { file };
+
+export default u

@@ -296,37 +296,6 @@ async function variableGenerate ()
     return newCollection
 }
 
-async function TEST ()
-{
-    const memoryName = "RedFlow.txt"
-    const memoryJson = `This is some placeholder text.
-  You can put whatever you like here.
-  – RedKet’s dummy asset`
-
-    const memoryNew = new File([memoryJson], memoryName, { type: "text/plain" })
-
-    try {
-        await webflow.createAsset(memoryNew)
-
-        const assets = await webflow.getAllAssets()
-
-        for (const asset of assets) {
-            if ((await asset.getName()) === memoryName) {
-                const response = await fetch(await asset.getUrl())
-
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch asset: ${response.status}`)
-                }
-                const content = await response.text()
-                console.log(`Contents of ${memoryName}:\n${content}`)
-            }
-        }
-    } catch (err) {
-        webflow.notify({ type: "Error", message: err })
-    }
-}
-
-
 export async function ClassCreate ()
 {
 
