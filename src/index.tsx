@@ -5,17 +5,7 @@ import { memoryAddValue, memoryReadValue } from "./utils/memoryManager";
 
 async function test ()
 {
-
-  await memoryAddValue('userPrefs2', {
-    'font-size': 16,
-    'theme.color': 'blue',            // nested via dot-notation
-    'test': { 'test2': 'font-100' }
-  });
-
-
-  const settings = await memoryReadValue('userPrefs2', ['fontSize', 'enabled2', 'test']);
-  console.log(settings)
-
+  await memoryAddValue('RedFlow_File', { 'itemA': 'A', 'groupA': { 'itemB': 'B', 'itemC': { "JJJ": 10, "kkk": 69 } } });
 }
 
 const App: React.FC = () =>

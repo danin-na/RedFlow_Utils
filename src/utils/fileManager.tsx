@@ -2,12 +2,40 @@
  * Manager API Wrappers for Webflow Assets and Folders
  */
 
+/*
+  Syntax:
+
+  createFolder(name: string): Promise<AssetFolder | null>
+
+  getFolderById(id: string): Promise<AssetFolder | null>
+
+  getFolderByName(name: string): Promise<AssetFolder | null>
+
+  ensureFolder(name: string): Promise<AssetFolder>
+
+  getAssetById(id: string): Promise<Asset | null>
+
+  getAssetByName(name: string): Promise<Asset | null>
+
+  createAsset(name: string, content: string | Record<string, any>): Promise<Asset | null>
+
+  updateAsset(asset: Asset, content: string | Record<string, any>): Promise<Asset | null>
+
+  readAsset(asset: Asset): Promise<any>
+
+  ensureAsset(folderName: string,assetName: string, initialContent?: string | Record<string, any>): Promise<Asset>
+
+  setAssetFolder(asset: Asset, folder: AssetFolder): Promise<Asset | null>
+
+ */
+
+
 /**
  * Creates a new asset folder with the given name.
  * @param name - The name of the folder to create.
  * @returns A Promise that resolves to the created AssetFolder, or null if creation failed.
  * @example
- * const folder = await file.createFolder('Images');
+ * const folder = await createFolder('Images');
  * if (folder) console.log(`Folder created: ${await folder.getName()}`);
  */
 
@@ -22,7 +50,7 @@ async function createFolder (name: string): Promise<AssetFolder | null>
  * @param id - The ID of the folder to retrieve.
  * @returns A Promise that resolves to the AssetFolder if found, or null otherwise.
  * @example
- * const folder = await file.getFolderById('12345');
+ * const folder = await getFolderById('12345');
  * if (folder) console.log(`Found folder: ${await folder.getName()}`);
  */
 
@@ -40,7 +68,7 @@ async function getFolderById (id: string): Promise<AssetFolder | null>
  * @param name - The name of the folder to find.
  * @returns A Promise that resolves to the AssetFolder if found, or null otherwise.
  * @example
- * const folder = await file.getFolderByName('Documents');
+ * const folder = await getFolderByName('Documents');
  * if (folder) console.log(`Found folder: ${await folder.getName()}`);
  */
 
@@ -59,7 +87,7 @@ async function getFolderByName (name: string): Promise<AssetFolder | null>
  * @returns A Promise that resolves to the existing or newly created AssetFolder.
  * @throws If folder creation fails.
  * @example
- * const folder = await file.ensureFolder('Backups');
+ * const folder = await ensureFolder('Backups');
  * console.log(`Folder ready: ${await folder.getName()}`);
  */
 
@@ -83,7 +111,7 @@ async function ensureFolder (name: string): Promise<AssetFolder>
  * @param id - The ID of the asset to retrieve.
  * @returns A Promise that resolves to the Asset if found, or null otherwise.
  * @example
- * const asset = await file.getAssetById('abcde');
+ * const asset = await getAssetById('abcde');
  * if (asset) console.log(`Asset URL: ${await asset.getUrl()}`);
  */
 
@@ -98,7 +126,7 @@ async function getAssetById (id: string): Promise<Asset | null>
  * @param name - The base name (without extension) of the asset to find.
  * @returns A Promise that resolves to the Asset if found, or null otherwise.
  * @example
- * const asset = await file.getAssetByName('config');
+ * const asset = await getAssetByName('config');
  * if (asset) console.log(`Found asset: ${await asset.getName()}`);
  */
 
@@ -117,7 +145,7 @@ async function getAssetByName (name: string): Promise<Asset | null>
  * @param content - The text or JSON content to store in the asset.
  * @returns A Promise that resolves to the created Asset, or null if creation failed.
  * @example
- * const asset = await file.createAsset('settings', { theme: 'dark' });
+ * const asset = await createAsset('settings', { theme: 'dark' });
  * console.log(`New asset created: ${await asset.getName()}`);
  */
 
@@ -136,7 +164,7 @@ async function createAsset (name: string, content: string | Record<string, any>)
  * @param content - The new text or JSON content.
  * @returns A Promise that resolves to the updated Asset, or null on failure.
  * @example
- * const updated = await file.updateAsset(asset, 'Updated config');
+ * const updated = await updateAsset(asset, 'Updated config');
  * if (updated) console.log('Asset updated successfully');
  */
 
@@ -159,7 +187,7 @@ async function updateAsset (asset: Asset, content: string | Record<string, any>)
  * @param asset - The Asset to read.
  * @returns A Promise that resolves to parsed JSON or raw text.
  * @example
- * const data = await file.readAsset(asset);
+ * const data = await readAsset(asset);
  * console.log(data);
  */
 
@@ -184,7 +212,7 @@ async function readAsset (asset: Asset): Promise<any>
  * @returns A Promise that resolves to the existing or newly created Asset.
  * @throws If creation or assignment fails.
  * @example
- * const asset = await file.ensureAsset('Configs', 'appSettings', { version: 1 });
+ * const asset = await ensureAsset('Configs', 'appSettings', { version: 1 });
  * console.log(`Asset ready at URL: ${await asset.getUrl()}`);
  */
 
@@ -216,7 +244,7 @@ async function ensureAsset (
  * @param folder - The target AssetFolder.
  * @returns A Promise that resolves to the Asset if successful, or null on failure.
  * @example
- * const moved = await file.setAssetFolder(asset, folder);
+ * const moved = await setAssetFolder(asset, folder);
  * if (moved) console.log('Asset folder updated');
  */
 
@@ -230,7 +258,7 @@ async function setAssetFolder (asset: Asset, folder: AssetFolder): Promise<Asset
     }
 }
 
-export const file = {
+const file = {
     // Folder methods
     createFolder,
     getFolderById,
@@ -246,3 +274,5 @@ export const file = {
     // Combined
     setAssetFolder,
 };
+
+export default file

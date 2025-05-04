@@ -5,25 +5,29 @@ Goal: Create a Memory Manager that uses Asset Manager (inner layer) to create, r
 
 Asset Manager API:
 
-util.file.getAssetById(id: string): Promise<Asset | null>
-util.file.getAssetByName(name: string): Promise<Asset | null>
+f.getAssetById(id: string): Promise<Asset | null>
+f.getAssetByName(name: string): Promise<Asset | null>
 
-util.file.createAsset(name: string, content: string | Record<string, any>): Promise<Asset | null>
-util.file.updateAsset(asset: Asset, content: string | Record<string, any>): Promise<Asset | null>
-util.file.readAsset(asset: Asset): Promise<any>
+f.createAsset(name: string, content: string | Record<string, any>): Promise<Asset | null>
+f.updateAsset(asset: Asset, content: string | Record<string, any>): Promise<Asset | null>
+f.readAsset(asset: Asset): Promise<any>
 
-util.file.getFolderById(id: string): Promise<AssetFolder | null>
-util.file.getFolderByName(name: string): Promise<AssetFolder | null>
-util.file.createFolder(name: string): Promise<AssetFolder | null>
+f.getFolderById(id: string): Promise<AssetFolder | null>
+f.getFolderByName(name: string): Promise<AssetFolder | null>
+f.createFolder(name: string): Promise<AssetFolder | null>
 
-util.file.setAssetFolder(asset: Asset, folder: AssetFolder): Promise<Asset | null>
+f.setAssetFolder(asset: Asset, folder: AssetFolder): Promise<Asset | null>
 
-util.file.ensureFolder(name: string): Promise<AssetFolder>
-util.file.ensureAsset(folderName: string, assetName: string, initialContent?: string | Record<string, any>): Promise<Asset>
+f.ensureFolder(name: string): Promise<AssetFolder>
+f.ensureAsset(folderName: string, assetName: string, initialContent?: string | Record<string, any>): Promise<Asset>
 */
 
-import _ from 'lodash';
-import util from "@/src/utils";
+import lodash from 'lodash';
+import utils from "@/src/utils";
+
+const f = utils.file
+const _ = lodash
+
 
 const MEMORY_FOLDER = 'RedFlow';
 
@@ -34,8 +38,8 @@ const MEMORY_FOLDER = 'RedFlow';
  */
 async function ensureMemoryFile (fileName: string): Promise<Record<string, any>>
 {
-    const asset = await util.file.ensureAsset(MEMORY_FOLDER, `${fileName}.text`, '{}');
-    const raw = await util.file.readAsset(asset);
+    const asset = await f.ensureAsset(MEMORY_FOLDER, `${fileName}.text`, '{}');
+    const raw = await f.readAsset(asset);
     return typeof raw === 'string' ? JSON.parse(raw) : raw;
 }
 
@@ -46,7 +50,7 @@ async function ensureMemoryFile (fileName: string): Promise<Record<string, any>>
  * @param fileName  Base name without extension
  * @param entries   An object mapping lodash paths to values
  * @example         // single
- *                  await addMemoryEntries('userPrefs', { theme: 'dark', fontSize: 14 });
+ *                  await memoryAddValue('RedFlow_File', { 'itemA': 'A', 'groupA': { 'itemB': 'B', 'itemC': 'C' } });
  */
 export async function memoryAddValue (
     fileName: string,
@@ -54,8 +58,8 @@ export async function memoryAddValue (
 ): Promise<void>
 {
     try {
-        const asset = await util.file.ensureAsset(MEMORY_FOLDER, `${fileName}.text`, '{}');
-        const raw = await util.file.readAsset(asset);
+        const asset = await f.ensureAsset(MEMORY_FOLDER, `${fileName}.text`, '{}');
+        const raw = await f.readAsset(asset);
         const data: Record<string, any> =
             typeof raw === 'string' ? JSON.parse(raw) : raw;
 
@@ -69,7 +73,7 @@ export async function memoryAddValue (
 
         // Set all new entries
         _.forEach(entries, (value, key) => _.set(data, key, value));
-        await util.file.updateAsset(asset, JSON.stringify(data, null, 2));
+        await f.updateAsset(asset, JSON.stringify(data, null, 2));
     } catch (err: any) {
         const message = err instanceof Error ? err.message : String(err);
         webflow.notify({ type: 'Error', message });
@@ -94,12 +98,12 @@ export async function memoryReadValue (
 {
     try {
         // Attempt to get existing asset; do NOT create if missing
-        const asset = await util.file.getAssetByName(`${fileName}.text`);
+        const asset = await f.getAssetByName(`${fileName}.text`);
         if (!asset) {
             throw new Error(`Memory file '${fileName}.text' not found in '${MEMORY_FOLDER}'`);
         }
 
-        const raw = await util.file.readAsset(asset);
+        const raw = await f.readAsset(asset);
         const data: Record<string, any> =
             typeof raw === 'string' ? JSON.parse(raw) : raw;
 
@@ -118,8 +122,21 @@ export async function memoryReadValue (
     }
 }
 
-export
-{
-    ensureMemoryFile,
-    MEMORY_FOLDER,
+const file = {
+    // Folder methods
+    createFolder,
+    getFolderById,
+    getFolderByName,
+    ensureFolder,
+    // Asset methods
+    getAssetById,
+    getAssetByName,
+    createAsset,
+    updateAsset,
+    readAsset,
+    ensureAsset,
+    // Combined
+    setAssetFolder,
 };
+
+export default file

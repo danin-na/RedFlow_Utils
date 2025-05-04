@@ -1,5 +1,5 @@
-import { file } from "./fileManager";
+import file from "./fileManager";
 
-const u = { file };
+const utils = { file };
 
-export default u
+export default utils
