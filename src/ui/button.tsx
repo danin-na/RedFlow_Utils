@@ -20,6 +20,12 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        red: "bg-red-900/50 text-primary-foreground shadow-xs hover:bg-red-500/90",
+        orange: "bg-orange-900/50 text-primary-foreground shadow-xs hover:bg-orange-500/90",
+        yellow: "bg-yellow-900/50 text-primary-foreground shadow-xs hover:bg-yellow-500/90",
+        lime: "bg-lime-900/50 text-primary-foreground shadow-xs hover:bg-lime-500/90",
+        emerald: "bg-emerald-900/50 text-primary-foreground shadow-xs hover:bg-emerald-500/90",
+        indigo: "bg-indigo-900/50 text-primary-foreground shadow-xs hover:bg-indigo-500/90",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -35,7 +41,7 @@ const buttonVariants = cva(
   }
 )
 
-function Button({
+function Button ({
   className,
   variant,
   size,
@@ -44,7 +50,8 @@ function Button({
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
-  }) {
+  })
+{
   const Comp = asChild ? Slot : "button"
 
   return (

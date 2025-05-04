@@ -6,7 +6,7 @@ const App: React.FC = () =>
 {
   return (
 
-    <div className="h-screen p-2">
+    <div className="h-screen bg-background p-2">
       <CanvasMenu></CanvasMenu>
       <CanvasTab></CanvasTab>
     </div>

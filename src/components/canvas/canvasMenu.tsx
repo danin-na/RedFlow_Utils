@@ -17,20 +17,16 @@ import
     MenubarTrigger,
 } from "@/src/ui"
 
-import { CanvasResize, ClassCreate } from "@/src/components"
+import { CanvasResize, CanvasThemeDark, CanvasThemeLight, ClassCreate } from "@/src/components"
 
 export function CanvasMenu ()
 {
     return (
         <Menubar>
             <MenubarMenu>
-                <MenubarTrigger>Setting</MenubarTrigger>
+                <MenubarTrigger>App</MenubarTrigger>
                 <MenubarContent>
-                    <CanvasResize>
-                        <MenubarItem onSelect={(e) => e.preventDefault()}>
-                            Resize Canvas <MenubarShortcut>⌘T</MenubarShortcut>
-                        </MenubarItem>
-                    </CanvasResize>
+
 
                     <MenubarItem onClick={() => { ClassCreate() }}>
                         Install Utils <MenubarShortcut>⌘T</MenubarShortcut>
@@ -55,36 +51,21 @@ export function CanvasMenu ()
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
-                <MenubarTrigger disabled>Edit</MenubarTrigger>
+                <MenubarTrigger >Setting</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem disabled>
-                        Undo <MenubarShortcut>⌘Z</MenubarShortcut>
-                    </MenubarItem>
-                    <MenubarItem disabled>
-                        Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-                    </MenubarItem>
+                    <MenubarRadioGroup value="benoit">
+                        <MenubarRadioItem value="andy" onClick={() => { CanvasThemeDark() }}>Dark Mode</MenubarRadioItem>
+                        <MenubarRadioItem value="benoit" onClick={() => { CanvasThemeLight() }}>Light Mode</MenubarRadioItem>
+                    </MenubarRadioGroup>
                     <MenubarSeparator />
-                    <MenubarSub>
-                        <MenubarSubTrigger>Find</MenubarSubTrigger>
-                        <MenubarSubContent>
-                            <MenubarItem disabled>Search the web</MenubarItem>
-                            <MenubarSeparator />
-                            <MenubarItem disabled>Find...</MenubarItem>
-                            <MenubarItem disabled>Find Next</MenubarItem>
-                            <MenubarItem disabled>Find Previous</MenubarItem>
-                        </MenubarSubContent>
-                    </MenubarSub>
+                    <CanvasResize>
+                        <MenubarItem onSelect={(e) => e.preventDefault()} inset>
+                            Resize Canvas <MenubarShortcut>⌘T</MenubarShortcut>
+                        </MenubarItem>
+                    </CanvasResize>
                     <MenubarSeparator />
-                    <MenubarItem disabled>Cut</MenubarItem>
-                    <MenubarItem disabled>Copy</MenubarItem>
-                    <MenubarItem disabled>Paste</MenubarItem>
-                </MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu>
-                <MenubarTrigger disabled>View</MenubarTrigger>
-                <MenubarContent>
-                    <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
-                    <MenubarCheckboxItem checked>Always Show Full URLs</MenubarCheckboxItem>
+                    <MenubarCheckboxItem disabled >Always Show Setting Bar</MenubarCheckboxItem>
+                    <MenubarCheckboxItem checked disabled >Always Show App Bar</MenubarCheckboxItem>
                     <MenubarSeparator />
                     <MenubarItem disabled inset>
                         Reload <MenubarShortcut>⌘R</MenubarShortcut>
@@ -98,20 +79,6 @@ export function CanvasMenu ()
                     <MenubarItem disabled inset>Toggle Fullscreen</MenubarItem>
                     <MenubarSeparator />
                     <MenubarItem disabled inset>Hide Sidebar</MenubarItem>
-                </MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu>
-                <MenubarTrigger disabled>Profiles</MenubarTrigger>
-                <MenubarContent>
-                    <MenubarRadioGroup value="benoit">
-                        <MenubarRadioItem value="andy">Andy</MenubarRadioItem>
-                        <MenubarRadioItem value="benoit">Benoit</MenubarRadioItem>
-                        <MenubarRadioItem value="Luis">Luis</MenubarRadioItem>
-                    </MenubarRadioGroup>
-                    <MenubarSeparator />
-                    <MenubarItem disabled inset>Edit...</MenubarItem>
-                    <MenubarSeparator />
-                    <MenubarItem disabled inset>Add Profile...</MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
         </Menubar>
