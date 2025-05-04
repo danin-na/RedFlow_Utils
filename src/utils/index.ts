@@ -1,5 +1,3 @@
-import file from "./fileManager";
+export { file } from "./fileManager";
+export { memory } from "./memoryManager";
 
-const utils = { file };
-
-export default utils
