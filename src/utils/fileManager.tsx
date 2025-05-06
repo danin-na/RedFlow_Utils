@@ -1,40 +1,29 @@
-export namespace folder
+namespace folder
 {
 
+    // --
+    // Private Helper - type
+    // --
+
     type _Set = (
-        modes:
+        m:
             | { mode: "byName"; name: string }
     ) => Promise<AssetFolder[]>
 
     type _Get = (
-        modes:
+        m:
             | { mode: "all" }
             | { mode: "byId"; id: string }
             | { mode: "byName"; name: string }
     ) => Promise<AssetFolder[]>
 
     type _Ensure = (
-        modes:
+        m:
             | { mode: "byName"; name: string }
     ) => Promise<AssetFolder[]>
 
-    export type Set = (
-        modes: { mode: 'byName'; name: string; duplicate_if_exist: boolean }
-    ) => Promise<AssetFolder[]>
-
-    export type Get = (
-        modes:
-            | { mode: 'byName'; name: string; create_if_not_exist: boolean }
-            | { mode: 'byId'; id: string }
-    ) => Promise<AssetFolder[]>
-
-    export type Assign = (
-        modes:
-            | { mode: 'byName'; name: string; asset: Asset; create_if_not_exist: boolean }
-    ) => Promise<AssetFolder[]>
-
     // --
-    // Private Helper
+    // Private Helper - fn
     // --
 
     const _set: _Set = async (m) =>
@@ -85,7 +74,24 @@ export namespace folder
     };
 
     // --
-    // Public Api
+    // Public Api - Type
+    // --
+
+    export type Set = (m: SetType) => Promise<AssetFolder[]>
+    export type SetType =
+        { mode: 'byName'; name: string; duplicate_if_exist: boolean }
+
+    export type Get = (m: GetType) => Promise<AssetFolder[]>
+    export type GetType =
+        | { mode: 'byName'; name: string; create_if_not_exist: boolean }
+        | { mode: 'byId'; id: string }
+
+    export type Assign = (m: AssignType) => Promise<AssetFolder[]>
+    export type AssignType =
+        { mode: 'byName'; name: string; asset: Asset; create_if_not_exist: boolean }
+
+    // --
+    // Public Api - Fn
     // --
 
     export const set: Set = async (m) =>
@@ -134,43 +140,80 @@ export namespace folder
 
 }
 
-export namespace asset
+namespace asset
 {
-    const _create = async (file: File): Promise<Asset> => webflow.createAsset(file)
 
-    type m = { text: { content: string; fileName: string } } | { json: { content: string; fileName: string } }
 
-    const _generate = async (m: m): Promise<Asset> =>
+    // --
+    // Private Helper - type
+    // --
+
+    type _Set = (
+        file: File
+    ) => Promise<Asset>
+
+    // --
+    // Private Helper - fn
+    // --
+
+    const _set: _Set = async (f) =>
     {
-        let f: File
-
-        switch (true) {
-            case "text" in m: {
-                const { content, fileName } = m.text
-                const c = content
-                const n = fileName
-                const t = "text/plain"
-                const b = new Blob([c], { type: t })
-                f = new File([b], n, { type: t })
-                break
-            }
-
-            case "json" in m: {
-                const { content, fileName } = m.json
-                const c = typeof content === "string" ? content : JSON.stringify(content, null, 2)
-                const t = "text/plain"
-                const n = fileName.replace(/\.[^.]+$/, "") + ".txt"
-                const b = new Blob([c], { type: t })
-                f = new File([b], n, { type: t })
-                break
-            }
-
-            default:
-                throw new Error("invalid input")
-        }
-
-        return _create(f)
+        return await webflow.createAsset(f)
     }
+
+    // --
+    // Public Api - Type
+    // --
+
+    export type Set = (m: SetType, fl?: folder.AssignType) => Promise<Asset>;
+    export type SetType =
+        | { mode: 'Text'; content: string; fileName: string }
+        | { mode: 'Json'; content: string | Record<string, any>; fileName: string }
+
+    // --
+    // Public Api - fn
+    // --
+
+    export const set: Set = async (m, fl) =>
+    {
+        let f: File;
+        const name_clean = (name: string) => name.replace(/\.[^.]+$/, "")
+
+        switch (m.mode) {
+            case 'Text': {
+                const c = m.content
+                const t = 'text/plain'
+                const n = name_clean(m.fileName) + ".txt"
+                const b = new Blob([c], { type: t })
+                f = new File([b], n, { type: t })
+                break
+            }
+            case 'Json': {
+                const c = typeof m.content === "string"
+                    ? m.content
+                    : JSON.stringify(m.content, null, 2)
+                const t = 'text/plain'
+                const n = name_clean(m.fileName) + ".txt"
+                const b = new Blob([c], { type: t })
+                f = new File([b], n, { type: t })
+                break
+            }
+            default:
+                throw new Error('invalid input')
+        }
+        const newFile = await _set(f)
+
+        if (fl) {
+            await folder.assign({
+                mode: "byName",
+                name: fl.name,
+                asset: newFile,
+                create_if_not_exist: fl.create_if_not_exist
+            })
+        }
+        return newFile
+    }
+
 }
 
-export const file = { folder }
+export const file = { folder, asset }
