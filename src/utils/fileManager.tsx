@@ -143,7 +143,6 @@ namespace folder
 namespace asset
 {
 
-
     // --
     // Private Helper - type
     // --
@@ -151,6 +150,13 @@ namespace asset
     type _Set = (
         file: File
     ) => Promise<Asset>
+
+    type _Get = (
+        m:
+            | { mode: "all" }
+            | { mode: "byId"; id: string }
+            | { mode: "byName"; name: string }
+    ) => Promise<Asset[]>;
 
     // --
     // Private Helper - fn
@@ -161,6 +167,27 @@ namespace asset
         return await webflow.createAsset(f)
     }
 
+    const _get: _Get = async (m) =>
+    {
+        switch (m.mode) {
+            case "all":
+                return await webflow.getAllAssets();
+
+            case "byId":
+                return [await webflow.getAssetById(m.id)];
+
+            case "byName": {
+                const all = await webflow.getAllAssets();
+                const names = await Promise.all(all.map((a) => a.getName()));
+                return all.filter((_, i) => names[i] === m.name);
+            }
+
+            default:
+                throw new Error("Unsupported mode");
+        }
+    };
+
+
     // --
     // Public Api - Type
     // --
@@ -169,6 +196,16 @@ namespace asset
     export type SetType =
         | { mode: 'Text'; content: string; fileName: string }
         | { mode: 'Json'; content: string | Record<string, any>; fileName: string }
+
+    export type Get = (m: GetType) => Promise<Asset[]>;
+    export type GetType =
+        | { mode: "all" }
+        | { mode: "byId"; id: string }
+        | { mode: "byName"; name: string };
+
+    export type Read = (m: ReadType) => Promise<any>;
+    export type ReadType =
+        { mode: "Json"; name: string };
 
     // --
     // Public Api - fn
@@ -214,6 +251,28 @@ namespace asset
         return newFile
     }
 
+    export const get: Get = async (m) =>
+    {
+        return await _get(m);
+    };
+
+    export const read: Read = async (m) =>
+    {
+        switch (m.mode) {
+            case "Json": {
+                const [assetFile] = await _get({ mode: "byName", name: m.name });
+                if (!assetFile) {
+                    throw new Error(`Asset with name "${m.name}" not found`);
+                }
+                const url = await assetFile.getUrl();
+                const response = await fetch(url);
+                const text = await response.text();
+                return JSON.parse(text);
+            }
+            default:
+                throw new Error("Unsupported read mode");
+        }
+    };
 }
 
 export const file = { folder, asset }
